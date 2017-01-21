@@ -7,4 +7,9 @@ CF.Key.set(KEY)
 class DoorControl:
 
     def identify_incoming_person():
-        
+        pass
+
+    def add_family_member():
+        pass
+
+    
