@@ -32,7 +32,7 @@ def initialize_door():
         
 DoorControl = initialize_door
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def identify_person():
     image = capture_image()
     return str(DoorControl.identify_incoming_person(image))
