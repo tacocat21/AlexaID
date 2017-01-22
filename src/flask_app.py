@@ -1,12 +1,14 @@
+from flask import Flask
 from door_control.door_control import DoorControl as DoorControlObj
 from door_control.camera_control import capture_image
-import time
-import cognitive_face as CF
 
-if __name__ == '__main__':
 
+app = Flask(__name__)
+
+def initialize_door():
     DoorControl = DoorControlObj()
-    # DoorControl.reset_groups()
+    DoorControl.reset_groups()
+    DoorControl.create_groups()
     bill_images = ['./images/1.jpg',
                    './images/2.jpg',
                    './images/3.jpg',
@@ -21,15 +23,16 @@ if __name__ == '__main__':
     viraat_images = ['./images/12.jpg',
                      './images/13.jpg',
                      './images/14.jpg']
-    for image in bill_images:
-        
-    DoorControl.add_family_member('Kendall Koe', kendall_images)
-    DoorControl.add_ban('Taccio Yamamoto', ['./src/images/test_taccio.jpg'])
-    DoorControl.add_friend('Taccio Yamamoto', ['./src/images/test_taccio.jpg'])
+    DoorControl.add_family_member('Bill', bill_images)
+    DoorControl.add_family_member('Kendall', kendall_images)
+    DoorControl.add_friend('Taccio', taccio_images)
+    DoorControl.add_ban('Viraat', viraat_images)
     DoorControl.train()
-#    time.sleep(1)
-    print(DoorControl.identify_incoming_person('./src/images/test_kendall.jpg'))
-    print(DoorControl.identify_incoming_person('./src/images/verify_kendall.jpg'))
-    print(DoorControl.identify_incoming_person('./src/images/verify_kendall1.jpg'))
-    print(DoorControl.identify_incoming_person('./src/images/test_taccio.jpg'))
+    return DoorControl
+        
+DoorControl = initialize_door
 
+@app.route('/', methods=['GET', 'POST'])
+def identify_person():
+    image = capture_image()
+    return str(DoorControl.identify_incoming_person(image))
